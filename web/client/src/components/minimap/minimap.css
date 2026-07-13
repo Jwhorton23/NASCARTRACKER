@@ -1,0 +1,100 @@
+.trackmap-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.trackmap-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.track-glow {
+  stroke: var(--flag-glow);
+  fill: none;
+  transition: stroke 0.6s ease;
+}
+
+.track-asphalt {
+  stroke: #23272e;
+  fill: none;
+}
+
+.track-centerline {
+  stroke: var(--flag-accent);
+  stroke-dasharray: 10 14;
+  opacity: 0.55;
+  fill: none;
+  transition: stroke 0.6s ease;
+}
+
+.track-name-label {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--text-3);
+  text-anchor: middle;
+}
+
+.car-dot {
+  cursor: pointer;
+}
+
+/* invisible until the animation loop places it */
+.car-dot:not([transform]) {
+  visibility: hidden;
+}
+
+.car-dot circle {
+  stroke: rgba(0, 0, 0, 0.55);
+  stroke-width: 1.5;
+}
+
+.car-dot text {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  user-select: none;
+}
+
+.car-dot.leader circle {
+  stroke: #ffffff;
+  stroke-width: 2.5;
+}
+
+.car-dot.focused circle {
+  stroke: var(--flag-accent);
+  stroke-width: 3;
+}
+
+.car-dot .focus-name {
+  font-size: 16px;
+  fill: var(--text);
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.8);
+  stroke-width: 4;
+}
+
+.map-legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.map-legend .swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: -1px;
+}

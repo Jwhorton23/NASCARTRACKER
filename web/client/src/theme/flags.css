@@ -1,0 +1,82 @@
+/* Flag-state theming: one data attribute on <html> re-themes the app.
+   Components consume --flag-accent / --flag-glow / --flag-ink, never raw colors. */
+
+:root,
+:root[data-flag='none'] {
+  --flag-accent: #9aa0a6;
+  --flag-accent-dim: #5f6368;
+  --flag-glow: rgba(154, 160, 166, 0.18);
+  --flag-ink: #0b0d10; /* text color on top of the accent */
+  --flag-banner-bg: var(--flag-accent);
+}
+
+:root[data-flag='green'] {
+  --flag-accent: #21c15a;
+  --flag-accent-dim: #157a3a;
+  --flag-glow: rgba(33, 193, 90, 0.30);
+  --flag-ink: #04150a;
+  --flag-banner-bg: var(--flag-accent);
+}
+
+:root[data-flag='yellow'] {
+  --flag-accent: #ffd42a;
+  --flag-accent-dim: #a8880e;
+  --flag-glow: rgba(255, 212, 42, 0.32);
+  --flag-ink: #1c1500;
+  --flag-banner-bg: var(--flag-accent);
+}
+
+:root[data-flag='red'] {
+  --flag-accent: #ff3b30;
+  --flag-accent-dim: #99231d;
+  --flag-glow: rgba(255, 59, 48, 0.35);
+  --flag-ink: #1a0503;
+  --flag-banner-bg: var(--flag-accent);
+}
+
+:root[data-flag='white'] {
+  --flag-accent: #f5f5f5;
+  --flag-accent-dim: #8f8f8f;
+  --flag-glow: rgba(255, 255, 255, 0.28);
+  --flag-ink: #101010;
+  --flag-banner-bg: var(--flag-accent);
+}
+
+:root[data-flag='checkered'] {
+  --flag-accent: #e8eaed;
+  --flag-accent-dim: #7a7d82;
+  --flag-glow: rgba(255, 255, 255, 0.25);
+  --flag-ink: #0b0d10;
+  --flag-banner-bg: repeating-conic-gradient(#111 0% 25%, #f2f2f2 0% 50%) 0 0 / 22px 22px;
+}
+
+:root[data-flag='hot'] {
+  --flag-accent: #ff8a3c;
+  --flag-accent-dim: #a1531d;
+  --flag-glow: rgba(255, 138, 60, 0.28);
+  --flag-ink: #1c0e02;
+  --flag-banner-bg: var(--flag-accent);
+}
+
+:root[data-flag='cold'] {
+  --flag-accent: #5fb7ff;
+  --flag-accent-dim: #2c6ea3;
+  --flag-glow: rgba(95, 183, 255, 0.28);
+  --flag-ink: #06121c;
+  --flag-banner-bg: var(--flag-accent);
+}
+
+/* smooth "the room changes color" transition on themed elements */
+.flag-themed {
+  transition:
+    background-color 0.6s ease,
+    border-color 0.6s ease,
+    box-shadow 0.6s ease,
+    color 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flag-themed {
+    transition: none;
+  }
+}

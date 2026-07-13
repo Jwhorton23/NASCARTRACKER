@@ -1,0 +1,214 @@
+.page-loading,
+.page-error {
+  display: grid;
+  place-items: center;
+  min-height: 50vh;
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.page-error code {
+  background: var(--surface-2);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* ---- data tables ---- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  position: sticky;
+  top: -18px; /* counteract .app-main padding */
+  background: var(--surface);
+  z-index: 2;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+
+.data-table th.num,
+.data-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table tbody tr {
+  cursor: pointer;
+}
+
+.data-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+.data-table tbody tr.focused {
+  background: var(--surface-3);
+  box-shadow: inset 3px 0 0 var(--flag-accent);
+}
+
+.data-table tbody tr.off-track {
+  opacity: 0.45;
+}
+
+.car-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 22px;
+  padding: 0 4px;
+  border-radius: 5px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.pos-change {
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+.pos-change.up {
+  color: var(--good);
+}
+
+.pos-change.down {
+  color: var(--bad);
+}
+
+.lap-best-session {
+  color: var(--purple);
+  font-weight: 700;
+}
+
+.lap-best-personal {
+  color: var(--good);
+  font-weight: 600;
+}
+
+.chase-badge,
+.rookie-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
+.chase-badge {
+  background: rgba(180, 107, 255, 0.18);
+  color: var(--purple);
+}
+
+.rookie-badge {
+  background: rgba(255, 212, 42, 0.15);
+  color: var(--warn);
+}
+
+/* ---- page layout helpers ---- */
+.page-title {
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- flag history ---- */
+.flag-strip {
+  display: flex;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.flag-strip .seg {
+  height: 100%;
+}
+
+.flag-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.flag-event {
+  display: flex;
+  gap: 14px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
+
+.flag-event .fe-flag {
+  flex: none;
+  width: 92px;
+  text-align: center;
+  padding: 3px 0;
+  border-radius: 5px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flag-event .fe-lap {
+  flex: none;
+  width: 70px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+
+.flag-event .fe-comment {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.flag-event .fe-beneficiary {
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+/* ---- pit board ---- */
+.pit-summary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}

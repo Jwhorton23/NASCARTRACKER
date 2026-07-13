@@ -1,0 +1,237 @@
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+.overview-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.overview-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- flag banner ---- */
+.flag-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: var(--radius);
+  background: var(--flag-banner-bg);
+  color: var(--flag-ink);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@keyframes flag-pulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.35); }
+  100% { filter: brightness(1); }
+}
+
+.flag-banner.pulse {
+  animation: flag-pulse 1s ease 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flag-banner.pulse {
+    animation: none;
+  }
+}
+
+/* ---- lap counter ---- */
+.lap-counter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+}
+
+.stat-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+
+.stat-tile .stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.stat-tile .stat-value {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-tile .stat-value .unit {
+  font-size: 16px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.stat-tile.hero .stat-value {
+  color: var(--flag-accent);
+  transition: color 0.6s ease;
+}
+
+/* ---- race progress bar ---- */
+.race-progress {
+  position: relative;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.race-progress .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--flag-accent);
+  transition: width 1s linear, background-color 0.6s ease;
+  border-radius: 9px;
+}
+
+.race-progress .stage-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(11, 13, 16, 0.7);
+}
+
+/* ---- stage pills ---- */
+.stage-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.stage-pill {
+  flex: 1;
+  position: relative;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+}
+
+.stage-pill .pill-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--flag-accent);
+  opacity: 0.32;
+  transition: width 1s linear, background-color 0.6s ease;
+}
+
+.stage-pill span {
+  position: relative;
+  z-index: 1;
+}
+
+.stage-pill.done {
+  color: var(--text);
+}
+
+.stage-pill.done .pill-fill {
+  opacity: 0.5;
+}
+
+.stage-pill.current {
+  outline: 1px solid var(--flag-accent);
+  color: var(--text);
+}
+
+/* ---- leaders strip ---- */
+.leaders-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.leader-chip {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.leader-chip:hover {
+  border-color: var(--flag-accent);
+}
+
+.leader-chip .pos {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text-2);
+  width: 24px;
+  text-align: center;
+}
+
+.leader-chip .car-badge {
+  flex: none;
+  min-width: 30px;
+  height: 26px;
+  padding: 0 5px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.leader-chip .drv {
+  min-width: 0;
+}
+
+.leader-chip .drv .name {
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leader-chip .drv .lap {
+  font-size: 11px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
