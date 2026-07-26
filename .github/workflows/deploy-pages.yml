@@ -48,6 +48,12 @@ jobs:
       - name: Add SPA fallback for GitHub Pages routing
         run: cp web/client/dist/index.html web/client/dist/404.html
 
+      # NOTE: this step fails with "Not Found" on a repo where Pages has never
+      # been touched, even with Settings -> Pages -> Source set to "GitHub
+      # Actions" — it needs one successful run (or a manual visit to that
+      # settings page) before the Pages site object exists. That's a one-time
+      # bootstrap failure, not a bug: re-running the workflow after enabling
+      # Pages resolves it.
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
