@@ -3,4 +3,5 @@ __pycache__/
 
 node_modules/
 web/client/dist/
+web/*/dist/
 web/server/.env
