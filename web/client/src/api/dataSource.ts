@@ -10,6 +10,12 @@ const PROXY_ROUTES: Record<LiveEndpoint, string> = {
   stagePoints: '/api/live/stage-points',
 };
 
+/** '' (proxyBase unset) => same-origin '/api', proxied by Vite locally.
+ *  A hosted URL (e.g. a Render deployment) => absolute cross-origin request. */
+function proxyUrl(endpoint: LiveEndpoint, proxyBase: string): string {
+  return `${proxyBase}${PROXY_ROUTES[endpoint]}`;
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
@@ -18,7 +24,7 @@ async function fetchJson<T>(url: string): Promise<T> {
 
 /** Fetch a live endpoint from the active data source (proxy, replay server, or demo sim). */
 export async function fetchLive<T>(endpoint: LiveEndpoint): Promise<T> {
-  const { dataSource, replayBase } = useSettings.getState();
+  const { dataSource, replayBase, proxyBase } = useSettings.getState();
   switch (dataSource) {
     case 'demo':
       return demoFetch(endpoint) as T;
@@ -26,7 +32,7 @@ export async function fetchLive<T>(endpoint: LiveEndpoint): Promise<T> {
       return fetchJson<T>(`${replayBase}${LIVE_FEED_PATHS[endpoint]}`);
     case 'proxy':
     default:
-      return fetchJson<T>(PROXY_ROUTES[endpoint]);
+      return fetchJson<T>(proxyUrl(endpoint, proxyBase));
   }
 }
 

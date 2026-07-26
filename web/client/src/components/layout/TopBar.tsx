@@ -12,6 +12,8 @@ export function TopBar({ onToggleCameras }: TopBarProps) {
   const { data: feed, isError, dataUpdatedAt } = useLiveFeed();
   const dataSource = useSettings((s) => s.dataSource);
   const setDataSource = useSettings((s) => s.setDataSource);
+  const proxyBase = useSettings((s) => s.proxyBase);
+  const setProxyBase = useSettings((s) => s.setProxyBase);
 
   const ageMs = dataUpdatedAt ? Date.now() - dataUpdatedAt : Infinity;
   const stale = !isError && ageMs > 5000;
@@ -56,6 +58,18 @@ export function TopBar({ onToggleCameras }: TopBarProps) {
         <option value="proxy">Live (proxy)</option>
         <option value="replay">Replay server</option>
       </select>
+
+      {dataSource === 'proxy' && (
+        <input
+          className="source-select"
+          style={{ width: 200 }}
+          type="text"
+          placeholder="/api (same origin)"
+          defaultValue={proxyBase}
+          onBlur={(e) => setProxyBase(e.target.value.trim())}
+          title="Proxy server URL — leave blank for same-origin /api, or paste a hosted proxy's URL (e.g. Render)"
+        />
+      )}
 
       <button className="cameras-btn" onClick={onToggleCameras}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

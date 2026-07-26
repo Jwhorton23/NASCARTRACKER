@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LiveFeed } from '@nascar/shared';
-import { FLAG_STATES, MFR_COLORS } from '@nascar/shared';
+import { FLAG_STATES, MFR_COLORS, MFR_NAMES } from '@nascar/shared';
 import {
   formatDelta,
   formatElapsed,
   formatLapTime,
   isPractice,
+  lapsLedTotal,
   raceProgress,
   sortedVehicles,
   stageProgress,
@@ -125,17 +126,19 @@ export function LeadersStrip({
   feed: LiveFeed;
   onFocusCar?: (car: string) => void;
 }) {
-  const top5 = sortedVehicles(feed).slice(0, 5);
+  const topN = sortedVehicles(feed).slice(0, 10);
   return (
     <div className="leaders-strip">
-      {top5.map((v) => {
+      {topN.map((v) => {
         const color = MFR_COLORS[v.vehicle_manufacturer] ?? '#8a93a5';
         const ink = v.vehicle_manufacturer === 'Chv' ? '#181200' : '#fff';
+        const gained = v.starting_position - v.running_position;
+        const led = lapsLedTotal(v);
+        const pitCount = v.pit_stops?.length ?? 0;
         return (
           <button
             key={v.vehicle_number}
             className="leader-chip"
-            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
             onClick={() => onFocusCar?.(v.vehicle_number)}
           >
             <span className="pos">{v.running_position}</span>
@@ -143,13 +146,35 @@ export function LeadersStrip({
               {v.vehicle_number}
             </span>
             <span className="drv">
-              <div className="name">{v.driver.full_name}</div>
-              <div className="lap mono-num">
-                {v.running_position === 1
-                  ? `Last ${formatLapTime(v.last_lap_time)}`
-                  : formatDelta(v)}
+              <div className="name">
+                {v.driver.full_name}
+                {v.driver.is_in_chase && <span className="chase-badge">PLAYOFF</span>}
+              </div>
+              <div className="meta-row">
+                <span>{MFR_NAMES[v.vehicle_manufacturer] ?? v.vehicle_manufacturer}</span>
+                <span>
+                  Start P{v.starting_position}
+                  {gained !== 0 && (
+                    <span className={`pos-change ${gained > 0 ? 'up' : 'down'}`}>
+                      {gained > 0 ? '▲' : '▼'}
+                      {Math.abs(gained)}
+                    </span>
+                  )}
+                </span>
+                <span>
+                  Best {formatLapTime(v.best_lap_time)}
+                  {v.best_lap_speed > 0 && ` (${v.best_lap_speed.toFixed(1)} mph)`}
+                </span>
+                <span>Last spd {v.last_lap_speed > 0 ? `${v.last_lap_speed.toFixed(1)} mph` : '—'}</span>
+                <span>Laps led {led}</span>
+                <span>Pit stops {pitCount}</span>
               </div>
             </span>
+            <div className="lap mono-num">
+              {v.running_position === 1
+                ? `Last ${formatLapTime(v.last_lap_time)}`
+                : formatDelta(v)}
+            </div>
           </button>
         );
       })}

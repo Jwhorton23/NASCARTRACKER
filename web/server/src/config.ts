@@ -15,7 +15,9 @@ function intEnv(name: string, fallback: number): number {
 
 export const config = {
   upstreamBase: (process.env.UPSTREAM_BASE ?? 'https://cf.nascar.com').replace(/\/$/, ''),
-  port: intEnv('PROXY_PORT', 3001),
+  // Hosts like Render/Railway/Fly assign the port via PORT; PROXY_PORT is the
+  // local-dev override (kept separate so it never collides with Vite's own PORT).
+  port: intEnv('PORT', intEnv('PROXY_PORT', 3001)),
   liveTtlMs: intEnv('LIVE_TTL_MS', 1000),
   cacherTtlMs: intEnv('CACHER_TTL_MS', 5 * 60 * 1000),
   staticTtlMs: intEnv('STATIC_TTL_MS', 60 * 60 * 1000),

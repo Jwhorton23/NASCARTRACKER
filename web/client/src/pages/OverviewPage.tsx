@@ -27,7 +27,10 @@ export function OverviewPage() {
 
       <div className="overview-grid">
         <div className="overview-main">
-          <LeadersStrip feed={feed} onFocusCar={setFocusedCar} />
+          <div className="panel">
+            <div className="panel-title">Race leaders</div>
+            <LeadersStrip feed={feed} onFocusCar={setFocusedCar} />
+          </div>
         </div>
 
         <div className="overview-side">

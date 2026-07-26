@@ -33,11 +33,16 @@ jobs:
         working-directory: web
         run: npm ci
 
-      - name: Build client (demo mode, no backend needed)
+      # If PROXY_BASE_URL is set (Settings -> Secrets and variables -> Actions
+      # -> Variables), the deployed site defaults to Live mode against that
+      # hosted proxy (e.g. Render — see render.yaml). Otherwise it defaults to
+      # the self-contained demo simulator, since Pages can't run a server.
+      - name: Build client
         working-directory: web
         env:
           GITHUB_PAGES: 'true'
-          VITE_API_BASE: demo
+          VITE_API_BASE: ${{ vars.PROXY_BASE_URL && 'proxy' || 'demo' }}
+          VITE_PROXY_BASE: ${{ vars.PROXY_BASE_URL }}
         run: npm run build -w client
 
       - name: Add SPA fallback for GitHub Pages routing

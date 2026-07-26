@@ -1,0 +1,23 @@
+# Render Blueprint — hosts the NASCAR proxy server (web/server) as a free
+# always-on-ish web service. GitHub Pages can only serve static files, so the
+# live-data proxy needs a real host; Render's free tier works well for this.
+#
+# To deploy: on render.com, "New +" -> "Blueprint" -> select this repo.
+# Render finds this file automatically. After the first deploy, copy the
+# service URL into the NASCARTRACKER repo's Actions variable PROXY_BASE_URL
+# (Settings -> Secrets and variables -> Actions -> Variables) so the GitHub
+# Pages build points "Live (proxy)" at it by default.
+services:
+  - type: web
+    name: nascar-tracker-proxy
+    runtime: node
+    plan: free
+    rootDir: web
+    buildCommand: npm install
+    startCommand: npm run start -w server
+    autoDeploy: true
+    envVars:
+      - key: UPSTREAM_BASE
+        value: https://cf.nascar.com
+      - key: NODE_VERSION
+        value: 20
