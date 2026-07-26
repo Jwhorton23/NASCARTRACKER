@@ -14,6 +14,19 @@
   border-radius: 4px;
 }
 
+/* ---- compare bar (Leaderboard -> Analytics) ---- */
+.compare-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--flag-accent);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
 /* ---- data tables ---- */
 .data-table {
   width: 100%;

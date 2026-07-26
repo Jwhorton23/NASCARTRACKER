@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom';
 import { useLiveFeed } from '../api/queries';
-import { useSettings } from '../state/settingsStore';
+import { MAX_SELECTED_CARS, useSettings } from '../state/settingsStore';
 import { LoadingOrError } from './LoadingOrError';
 import {
   formatDelta,
@@ -15,6 +16,8 @@ export function LeaderboardPage() {
   const query = useLiveFeed();
   const focusedCar = useSettings((s) => s.focusedCar);
   const setFocusedCar = useSettings((s) => s.setFocusedCar);
+  const selectedCars = useSettings((s) => s.selectedCars);
+  const toggleSelectedCar = useSettings((s) => s.toggleSelectedCar);
   if (!query.data) return <LoadingOrError query={query} />;
   const feed = query.data;
   const vehicles = sortedVehicles(feed);
@@ -23,11 +26,25 @@ export function LeaderboardPage() {
   return (
     <div>
       <h1 className="page-title">Leaderboard</h1>
+
+      {selectedCars.length > 0 && (
+        <div className="compare-bar">
+          <span>
+            {selectedCars.length} driver{selectedCars.length > 1 ? 's' : ''} selected
+            {selectedCars.length >= MAX_SELECTED_CARS && ` (max ${MAX_SELECTED_CARS})`}
+          </span>
+          <Link to="/analytics" className="cameras-btn" style={{ textDecoration: 'none' }}>
+            Compare on Analytics →
+          </Link>
+        </div>
+      )}
+
       <div>
         <div className="panel scroll-x">
           <table className="data-table">
             <thead>
               <tr>
+                <th />
                 <th className="num">Pos</th>
                 <th>Car</th>
                 <th>Driver</th>
@@ -49,6 +66,7 @@ export function LeaderboardPage() {
                 const lastIsPersonalBest =
                   !lastIsSessionBest && v.last_lap_time > 0 && v.best_lap_time > 0 &&
                   Math.abs(v.last_lap_time - v.best_lap_time) < 1e-9;
+                const isSelected = selectedCars.includes(v.vehicle_number);
                 return (
                   <tr
                     key={v.vehicle_number}
@@ -57,6 +75,15 @@ export function LeaderboardPage() {
                       setFocusedCar(focusedCar === v.vehicle_number ? null : v.vehicle_number)
                     }
                   >
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        disabled={!isSelected && selectedCars.length >= MAX_SELECTED_CARS}
+                        onChange={() => toggleSelectedCar(v.vehicle_number)}
+                        title="Select for Analytics comparison"
+                      />
+                    </td>
                     <td className="num mono-num">
                       {v.running_position}
                       {gained !== 0 && (

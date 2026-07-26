@@ -1,0 +1,260 @@
+/* ---- shared line chart ---- */
+.chart-wrap {
+  position: relative;
+}
+
+.line-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.chart-axis {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.chart-tick {
+  font-size: 11px;
+  fill: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-axis-title {
+  font-size: 11px;
+  fill: var(--text-2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chart-band {
+  fill: rgba(255, 212, 42, 0.12);
+}
+
+.chart-line {
+  fill: none;
+  stroke-width: 2;
+}
+
+.chart-direct-label {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+.chart-crosshair {
+  stroke: var(--text-2);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.chart-tooltip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 12px;
+  min-width: 150px;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.chart-tooltip-lap {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.chart-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 0;
+}
+
+.chart-tooltip-label {
+  flex: 1;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chart-tooltip-value {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.chart-empty {
+  color: var(--text-2);
+  font-size: 13px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+/* ---- heatmap ---- */
+.heatmap-wrap {
+  padding-bottom: 4px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-auto-rows: 26px;
+  align-items: center;
+  gap: 2px;
+}
+
+.heatmap-corner {
+  position: sticky;
+  left: 0;
+}
+
+.heatmap-col-label {
+  font-size: 10px;
+  color: var(--text-3);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.heatmap-row-label {
+  position: sticky;
+  left: 0;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.heatmap-cell {
+  width: 14px;
+  height: 20px;
+  border-radius: 2px;
+}
+
+.heatmap-cell-empty {
+  background: var(--surface-2);
+  opacity: 0.4;
+}
+
+.heatmap-cell-caution {
+  outline: 1px dashed var(--border-strong);
+  outline-offset: -1px;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.heatmap-ramp {
+  display: inline-flex;
+}
+
+.heatmap-ramp span {
+  width: 16px;
+  height: 10px;
+}
+
+.heatmap-caution-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--surface-3);
+  outline: 1px dashed var(--border-strong);
+  outline-offset: -1px;
+}
+
+/* ---- analytics page ---- */
+.driver-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.driver-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  font-size: 13px;
+}
+
+.driver-chip button {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+}
+
+.driver-chip button:hover {
+  color: var(--bad);
+}
+
+.analytics-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-2);
+}
+
+.analytics-empty a {
+  color: var(--flag-accent);
+}
+
+.summary-table-wrap {
+  margin-bottom: 18px;
+}
+
+.analytics-section {
+  margin-bottom: 22px;
+}

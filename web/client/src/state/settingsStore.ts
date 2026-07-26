@@ -3,17 +3,22 @@ import { persist } from 'zustand/middleware';
 
 export type DataSourceMode = 'proxy' | 'replay' | 'demo';
 
+export const MAX_SELECTED_CARS = 8; // caps analytics chart legibility (categorical palette also has 8 slots)
+
 interface SettingsState {
   dataSource: DataSourceMode;
   replayBase: string;
   proxyBase: string; // '' = same-origin '/api' (local dev via Vite proxy); else an absolute hosted URL
   focusedCar: string | null;
   carsShown: number;
+  selectedCars: string[]; // insertion order = stable chart color assignment
   setDataSource: (mode: DataSourceMode) => void;
   setReplayBase: (base: string) => void;
   setProxyBase: (base: string) => void;
   setFocusedCar: (car: string | null) => void;
   setCarsShown: (n: number) => void;
+  toggleSelectedCar: (car: string) => void;
+  clearSelectedCars: () => void;
 }
 
 // Build-time defaults (see web/client/.env / GitHub Actions workflow).
@@ -37,11 +42,21 @@ export const useSettings = create<SettingsState>()(
       proxyBase: BUILD_PROXY_BASE,
       focusedCar: null,
       carsShown: 40,
+      selectedCars: [],
       setDataSource: (dataSource) => set({ dataSource }),
       setReplayBase: (replayBase) => set({ replayBase }),
       setProxyBase: (proxyBase) => set({ proxyBase: proxyBase.replace(/\/$/, '') }),
       setFocusedCar: (focusedCar) => set({ focusedCar }),
       setCarsShown: (carsShown) => set({ carsShown }),
+      toggleSelectedCar: (car) =>
+        set((s) => {
+          if (s.selectedCars.includes(car)) {
+            return { selectedCars: s.selectedCars.filter((c) => c !== car) };
+          }
+          if (s.selectedCars.length >= MAX_SELECTED_CARS) return s;
+          return { selectedCars: [...s.selectedCars, car] };
+        }),
+      clearSelectedCars: () => set({ selectedCars: [] }),
     }),
     {
       name: 'nascar-tracker-settings',
@@ -50,6 +65,7 @@ export const useSettings = create<SettingsState>()(
         replayBase: s.replayBase,
         proxyBase: s.proxyBase,
         carsShown: s.carsShown,
+        selectedCars: s.selectedCars,
       }),
     },
   ),

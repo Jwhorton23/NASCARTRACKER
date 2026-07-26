@@ -6,6 +6,7 @@ import { LeaderboardPage } from './pages/LeaderboardPage';
 import { PitsPage } from './pages/PitsPage';
 import { PointsPage } from './pages/PointsPage';
 import { FlagsPage } from './pages/FlagsPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const router = createHashRouter([
       { path: '/pits', element: <PitsPage /> },
       { path: '/points', element: <PointsPage /> },
       { path: '/flags', element: <FlagsPage /> },
+      { path: '/analytics', element: <AnalyticsPage /> },
     ],
   },
 ]);
