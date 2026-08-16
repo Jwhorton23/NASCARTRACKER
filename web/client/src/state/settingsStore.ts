@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type DataSourceMode = 'proxy' | 'replay' | 'demo';
+export type DataSourceMode = 'direct' | 'proxy' | 'replay' | 'demo';
 
 export const MAX_SELECTED_CARS = 8; // caps analytics chart legibility (categorical palette also has 8 slots)
 
@@ -21,17 +21,27 @@ interface SettingsState {
   clearSelectedCars: () => void;
 }
 
+/** The subset written to localStorage — see `partialize` below. */
+type PersistedSettings = Pick<
+  SettingsState,
+  'dataSource' | 'replayBase' | 'proxyBase' | 'carsShown' | 'selectedCars'
+>;
+
 // Build-time defaults (see web/client/.env / GitHub Actions workflow).
-// VITE_PROXY_BASE lets a static deploy (GitHub Pages) point "Live (proxy)"
-// at a separately-hosted proxy server, since Pages can't run one itself.
+// VITE_PROXY_BASE lets a static deploy point "Live (proxy)" at a
+// separately-hosted proxy server, since Pages can't run one itself. It is
+// optional: 'direct' mode reads the NASCAR CDN straight from the browser.
 const BUILD_PROXY_BASE = (import.meta.env.VITE_PROXY_BASE as string | undefined)?.replace(/\/$/, '') ?? '';
 
 const envDefault = (): DataSourceMode => {
   const base = import.meta.env.VITE_API_BASE as string | undefined;
   if (base === 'demo') return 'demo';
-  if (base === 'proxy' || BUILD_PROXY_BASE) return 'proxy';
+  if (base === 'direct') return 'direct';
+  if (base === 'proxy') return 'proxy';
   if (base && base.includes('8080')) return 'replay';
-  return 'demo'; // demo by default so the app works with zero setup; switchable in TopBar
+  // Direct by default: it needs no server of any kind, so it works the same
+  // on GitHub Pages as it does locally. Switchable in the TopBar.
+  return 'direct';
 };
 
 export const useSettings = create<SettingsState>()(
@@ -60,6 +70,18 @@ export const useSettings = create<SettingsState>()(
     }),
     {
       name: 'nascar-tracker-settings',
+      version: 1,
+      // v0 browsers persisted dataSource: 'proxy', which only ever worked with
+      // a proxy server reachable from that browser — on a static host it left
+      // the app stuck on "start the proxy". 'direct' needs no server, so move
+      // those sessions over; the proxy stays available in the TopBar selector.
+      migrate: (persisted, version) => {
+        const s = persisted as PersistedSettings;
+        if (version < 1 && s?.dataSource === 'proxy') {
+          return { ...s, dataSource: 'direct' };
+        }
+        return s;
+      },
       partialize: (s) => ({
         dataSource: s.dataSource,
         replayBase: s.replayBase,

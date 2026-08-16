@@ -68,6 +68,13 @@ export const MFR_NAMES: Record<string, string> = {
 
 export const PRACTICE_LAPS = 999;
 
+// The public CDN that serves the live feeds. Every path in LIVE_FEED_PATHS
+// answers with `Access-Control-Allow-Origin: *`, so a browser can read them
+// cross-origin without help — which is what lets a static deploy (GitHub
+// Pages) show live data with no proxy server of its own. See the 'direct'
+// data source in web/client/src/api/dataSource.ts.
+export const NASCAR_CDN_BASE = 'https://cf.nascar.com';
+
 // Upstream feed paths on cf.nascar.com (also served by the Python replay server)
 export const LIVE_FEED_PATHS = {
   feed: '/live/feeds/live-feed.json',

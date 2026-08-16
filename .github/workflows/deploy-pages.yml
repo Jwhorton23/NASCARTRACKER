@@ -33,15 +33,20 @@ jobs:
         working-directory: web
         run: npm ci
 
-      # If PROXY_BASE_URL is set (Settings -> Secrets and variables -> Actions
-      # -> Variables), the deployed site defaults to Live mode against that
-      # hosted proxy (e.g. Render — see render.yaml). Otherwise it defaults to
-      # the self-contained demo simulator, since Pages can't run a server.
+      # Pages can't run a server, so the site defaults to 'direct': the browser
+      # reads cf.nascar.com itself, which is allowed because those feeds send
+      # `Access-Control-Allow-Origin: *`. No proxy needed for live data.
+      #
+      # PROXY_BASE_URL (Settings -> Secrets and variables -> Actions ->
+      # Variables) is optional. Set it only if you want a hosted proxy (e.g.
+      # Render — see render.yaml) for its server-side caching; it just
+      # pre-fills the proxy URL, and "Live (via proxy)" stays a manual choice
+      # in the TopBar so a sleeping free-tier service can't stall the site.
       - name: Build client
         working-directory: web
         env:
           GITHUB_PAGES: 'true'
-          VITE_API_BASE: ${{ vars.PROXY_BASE_URL && 'proxy' || 'demo' }}
+          VITE_API_BASE: 'direct'
           VITE_PROXY_BASE: ${{ vars.PROXY_BASE_URL }}
         run: npm run build -w client
 

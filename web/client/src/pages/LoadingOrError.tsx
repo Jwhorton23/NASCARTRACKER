@@ -10,10 +10,17 @@ export function LoadingOrError({ query }: { query: UseQueryResult<unknown> }) {
         <div>
           <h2>No data from the {dataSource === 'proxy' ? 'live proxy' : dataSource} source</h2>
           <p>
+            {dataSource === 'direct' && (
+              <>
+                Couldn&apos;t reach the NASCAR feed at cf.nascar.com. Check your network
+                connection — an ad/tracker blocker or a captive portal can block it too.
+              </>
+            )}
             {dataSource === 'proxy' && (
               <>
-                Make sure the proxy server is running (<code>npm run dev -w server</code>).
-                Outside race weekends the NASCAR feed may also be empty.
+                Make sure the proxy server is running (<code>npm run dev -w server</code>),
+                or switch to <strong>Live</strong>, which reads the NASCAR feed directly and
+                needs no server. Outside race weekends the feed may also be empty.
               </>
             )}
             {dataSource === 'replay' && (

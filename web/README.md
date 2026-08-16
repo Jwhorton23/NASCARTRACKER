@@ -15,16 +15,29 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. The app starts in **Demo race** mode — a built-in
-simulated 160-lap race (green/yellow/white/checkered sequence, pit stops,
-stage points) so everything works with zero setup. Use the selector in the
-top-right to switch sources:
+Open http://localhost:5173. The app starts in **Live** mode, reading
+`cf.nascar.com` straight from the browser — no server required. Use the
+selector in the top-right to switch sources:
 
 | Source | What it does |
 |---|---|
+| **Live** | Real `cf.nascar.com` feeds, fetched directly by the browser (default) |
 | **Demo race** | Built-in simulator, no network needed |
-| **Live (proxy)** | Real `cf.nascar.com` feeds via the local proxy server |
+| **Live (via proxy)** | Same feeds through the local/hosted proxy server |
 | **Replay server** | A recorded race served by `python led_sports_ticker/replay.py` |
+
+### Why "Live" needs no proxy
+
+The five live feeds on `cf.nascar.com` answer with
+`Access-Control-Allow-Origin: *`, so a browser is allowed to read them
+cross-origin. That is what lets a **static** deploy (GitHub Pages) show live
+data with no backend at all.
+
+The proxy is still worth running when you want its server-side benefits —
+a shared 1 s read-through cache, in-flight dedup, and last-known-good
+fallback (`X-Stale: true`) — e.g. many clients hitting one cache. For a
+single browser, **Live** is the more reliable choice: there is no server to
+deploy, sleep, or fall over.
 
 ## Architecture
 
@@ -40,7 +53,20 @@ npm workspaces:
   Env (`server/.env`, see `.env.example`): `UPSTREAM_BASE` points at
   `https://cf.nascar.com` or a local replay server; `PROXY_PORT` overrides 3001.
 - **`client/`** — Vite + React SPA. TanStack Query polls the feed every second;
-  Vite dev-proxies `/api` to the server.
+  Vite dev-proxies `/api` to the server. `api/dataSource.ts` picks the active
+  source; the default `direct` mode bypasses `server/` entirely.
+
+## Deploying to GitHub Pages
+
+`.github/workflows/deploy-pages.yml` builds the client on every push to `main`
+and publishes `client/dist`. It builds with `VITE_API_BASE=direct`, so the
+deployed site shows live data on its own — no hosted proxy, no Actions
+variables required.
+
+Setting the optional `PROXY_BASE_URL` Actions variable only pre-fills the proxy
+URL for the **Live (via proxy)** option (see `render.yaml` for a Render
+blueprint); it no longer changes the default source, so a sleeping free-tier
+service can't leave the site without data.
 
 ### The track minimap
 
@@ -92,7 +118,7 @@ speed, seek) drives the replay server's `/replay/*` API.
 ## Commands
 
 ```bash
-npm run dev        # proxy (:3001) + client (:5173)
+npm run dev        # proxy (:3001) + client (:5173); client defaults to Live (direct)
 npm run dev:replay # proxy pointed at localhost:8080 + client
 npm test           # vitest: geometry, position synthesis, demo race sim
 npm run typecheck  # server + client

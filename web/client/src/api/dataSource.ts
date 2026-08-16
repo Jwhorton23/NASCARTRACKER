@@ -1,4 +1,4 @@
-import { LIVE_FEED_PATHS, type LiveEndpoint } from '@nascar/shared';
+import { LIVE_FEED_PATHS, NASCAR_CDN_BASE, type LiveEndpoint } from '@nascar/shared';
 import { useSettings, type DataSourceMode } from '../state/settingsStore';
 import { demoRace } from './demo/demoFeed';
 
@@ -16,13 +16,21 @@ function proxyUrl(endpoint: LiveEndpoint, proxyBase: string): string {
   return `${proxyBase}${PROXY_ROUTES[endpoint]}`;
 }
 
+/** Browser-to-CDN URL for a live feed.
+ *  The `_` cache-buster keeps CloudFront/browser caching from pinning a polled
+ *  feed to a stale copy; it stays a "simple" GET, so no CORS preflight. */
+function directUrl(endpoint: LiveEndpoint): string {
+  return `${NASCAR_CDN_BASE}${LIVE_FEED_PATHS[endpoint]}?_=${Date.now()}`;
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
   return (await res.json()) as T;
 }
 
-/** Fetch a live endpoint from the active data source (proxy, replay server, or demo sim). */
+/** Fetch a live endpoint from the active data source
+ *  (CDN direct, proxy, replay server, or demo sim). */
 export async function fetchLive<T>(endpoint: LiveEndpoint): Promise<T> {
   const { dataSource, replayBase, proxyBase } = useSettings.getState();
   switch (dataSource) {
@@ -31,8 +39,10 @@ export async function fetchLive<T>(endpoint: LiveEndpoint): Promise<T> {
     case 'replay':
       return fetchJson<T>(`${replayBase}${LIVE_FEED_PATHS[endpoint]}`);
     case 'proxy':
-    default:
       return fetchJson<T>(proxyUrl(endpoint, proxyBase));
+    case 'direct':
+    default:
+      return fetchJson<T>(directUrl(endpoint));
   }
 }
 
@@ -50,7 +60,8 @@ export function sourceLabel(mode: DataSourceMode): string {
   switch (mode) {
     case 'demo': return 'DEMO';
     case 'replay': return 'REPLAY';
-    case 'proxy': return 'LIVE';
+    case 'direct': return 'LIVE';
+    case 'proxy': return 'LIVE (PROXY)';
   }
 }
 

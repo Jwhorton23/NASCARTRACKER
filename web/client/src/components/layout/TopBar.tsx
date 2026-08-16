@@ -54,8 +54,9 @@ export function TopBar({ onToggleCameras }: TopBarProps) {
         }}
         title="Data source"
       >
+        <option value="direct">Live</option>
         <option value="demo">Demo race</option>
-        <option value="proxy">Live (proxy)</option>
+        <option value="proxy">Live (via proxy)</option>
         <option value="replay">Replay server</option>
       </select>
 
